@@ -60,10 +60,11 @@ const AuthForm = (props) => {
 
         let response = await authRepository.auth(form);
         //DECODE JWT
-        const tokenDecoded = jwtDecode(response)
+        console.log(response)
+        const tokenDecoded = jwtDecode(response.access_token)
 
-        localStorage.setItem('token-test', response)
-        dispatch(setAuthAction(tokenDecoded))
+        localStorage.setItem('token-test', response.access_token)
+        dispatch(setAuthAction(response.user))
 
         setRedirect(true);
         setAuthError(false);

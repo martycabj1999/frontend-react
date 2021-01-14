@@ -8,7 +8,6 @@ import SecurityIcon from '@material-ui/icons/Security';
 import { setAuthAction } from '../../user/auth/store/AuthAction';
 
 const ButtonProfile = (props) => {
-    const avatar = useSelector(state => state.avatar.avatar)
 
     const [anchorElem, setAnchorElem] = useState(null);
 
@@ -27,20 +26,9 @@ const ButtonProfile = (props) => {
         //se borra el usuario del storage y del localstorage 
         dispatch(setAuthAction({}));
         localStorage.removeItem('token-test')
-        localStorage.removeItem('avatar-test')
     }
     return (
         <div >
-            <Grid container justify="center" spacing={2}>
-                <Grid item >
-                    <Avatar
-                        aria-controls="simple-menu"
-                        aria-haspopup="true"
-                        onClick={openMenu}
-                        src={avatar}>
-                    </Avatar>
-                </Grid>
-            </Grid>
             <Menu
                 id="simple-menu"
                 anchorEl={anchorElem}

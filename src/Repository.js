@@ -32,12 +32,13 @@ function removeSidebars() {
 repository.interceptors.response.use(
 
   function (response) {
+    console.log("response data: ", response.data)
     return response.data.data;
   },
 
   function (error) {
     console.log("response error: ", error);
-    if (error.response.status === 422) {
+    if (error?.response?.status === 422) {
       const firstErrorKey = error.response.data.errors;
       Swal.fire({
         title: 'Error!',
@@ -45,14 +46,14 @@ repository.interceptors.response.use(
         icon: 'error',
         confirmButtonText: 'Cool'
       })
-    } else if (error.response.status === 404) {
+    } else if (error?.response?.status === 404) {
       // redirect to 404
       removeSidebars();
       window.location.href = "/pages/404";
-    } else if (error.response.status === 500) {
+    } else if (error?.response?.status === 500) {
       removeSidebars();
       window.location.href = "/pages/500";
-    } else if (error.response.status === 401) {
+    } else if (error?.response?.status === 401) {
       if (error.response.data.message !== "Incorrect email and password") {
         //window.location.href = "/pages/unauthorized";
       }
