@@ -1,6 +1,7 @@
 import React from 'react'
 import Register from "./modules/user/register/pages/Register";
 import Purchase from './modules/wallet/pages/Purchase';
+import Update from './modules/wallet/pages/Update';
 import Home from './modules/layout/pages/Home';
 import Auth from './modules/user/auth/pages/Auth';
 import Unauthorized from "./modules/layout/components/Unauthorized";
@@ -56,6 +57,14 @@ export const routesPrivate = [
         name: "Purchase",
         path: '/purchase',
         component: Purchase,
+        roles: ['admin', 'user'],
+        menuList: true,
+        icon: <ProfileIcon />,
+    },
+    {
+        name: "Update",
+        path: '/update/wallet',
+        component: Update,
         roles: ['admin', 'user'],
         menuList: true,
         icon: <ProfileIcon />,
