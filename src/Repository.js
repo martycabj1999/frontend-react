@@ -6,8 +6,8 @@ const repository = axios.create({
   baseURL,
 });
 
-let user = localStorage.getItem("token-test");
-const token = user ? "Bearer " + user : null;
+let user = JSON.parse(localStorage.getItem("token-test"));
+const token = user ? "Bearer " + user.access_token : null;
 
 if (token) {
   repository.defaults.headers.common["Authorization"] = token;

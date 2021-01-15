@@ -5,7 +5,7 @@ import Update from './modules/wallet/pages/Update';
 import Home from './modules/layout/pages/Home';
 import Auth from './modules/user/auth/pages/Auth';
 import Unauthorized from "./modules/layout/components/Unauthorized";
-import PanelAdmin from './modules/user/admin/pages/PanelAdmin';
+import Verified from './modules/wallet/pages/Verified';
 //icons
 import HomeIcon from '@material-ui/icons/HomeTwoTone';
 import ProfileIcon from '@material-ui/icons/AccountCircleTwoTone';
@@ -70,11 +70,11 @@ export const routesPrivate = [
         icon: <ProfileIcon />,
     },
     {
-        name: "User Management",
-        path: '/panel-admin',
-        component: PanelAdmin,
+        name: "Verified",
+        path: '/code',
+        component: Verified,
         roles: ['admin', 'user'],
-        menuList: true,
-        icon: <UserManagementIcon />,
+        menuList: false,
+        icon: <ProfileIcon />,
     }
 ];

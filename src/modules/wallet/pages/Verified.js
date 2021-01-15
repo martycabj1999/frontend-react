@@ -1,9 +1,9 @@
 import React from 'react';
 import { Container, Card, CardContent } from '@material-ui/core';
-import UpdateWalletForm from '../components/UpdateWalletForm'
+import CodeVerified from '../components/CodeVerified'
 import { useStyles } from '../styles/StylePage';
 
-const Update = () => {
+const Verified = () => {
     const classes = useStyles();
     return ( 
         <Container component="main" maxWidth="xs">
@@ -11,7 +11,7 @@ const Update = () => {
             <Card>
             <CardContent>
                 
-                <UpdateWalletForm />
+                <CodeVerified />
             </CardContent>
             </Card>
         </div>
@@ -19,4 +19,4 @@ const Update = () => {
      );
 }
  
-export default Update;
+export default Verified;

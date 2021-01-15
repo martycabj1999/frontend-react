@@ -12,6 +12,6 @@ export default {
         return Repository.post(`${resource}/purchase/verified`, data);
     },
     updateWallet(data) {
-        return Repository.put(`${resource}`, data);
+        return Repository.put(`${resource}/update`, data);
     }
 };

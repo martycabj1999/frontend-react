@@ -1,30 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Grid,
   TextField,
   Button,
-  IconButton,
-  Switch,
-  FormControlLabel,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Select,
-  MenuItem,
   Typography,
 } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import MailIcon from "@material-ui/icons/MailOutline";
 import NameIcon from "@material-ui/icons/AccountBoxOutlined";
-import PassIcon from "@material-ui/icons/LockOutlined";
-import VisibilityPassIconOn from "@material-ui/icons/VisibilityOutlined";
-import VisibilityOffOutlinedIconOff from '@material-ui/icons/VisibilityOffOutlined';
 import { useStyles } from '../styles/StyleForm'
 import Alert from '../../layout/components/alert/Alert'
-import { shortLength } from '../../../helps/regex'
+import Swal from 'sweetalert2'
 import { RepositoryFactory } from '../../../repositories/RepositoryFactory'
 
-const userRepository = RepositoryFactory.get('user')
+const walletRepository = RepositoryFactory.get('wallet')
 
 const PurchaseForm = (props) => {
 
@@ -46,13 +35,11 @@ const PurchaseForm = (props) => {
   })
 
   const closeForm = () => {
-    props.submitUpdate();
-    props.newUser(formData);
-    window.location.href = "/"
+    window.location.href = "/code"
   }
 
   const closeFormWithoutSave = () => {
-    props.submitUpdate();
+    window.location.href = "/code"
   }
 
   const onChange = event => {
@@ -88,11 +75,11 @@ const PurchaseForm = (props) => {
   const mountVerify = item => {
     let data = formData[item];
 
-    if (/^[a-zA-Z\s]*$/.test(data)) {
+    if (/^([0-9])*$/.test(data)) {
       clearHelperText(item);
       setFormState(false);
     } else {
-      setHelperText(item, "Only letters are allowed");
+      setHelperText(item, "Only numbers are allowed");
       setFormState(true);
     }
 
@@ -112,22 +99,23 @@ const PurchaseForm = (props) => {
     })
   };
 
-  const onChecked = event => {
-    setFormData({ ...formData, state: !formData.state });
-  }
-
   const onSubmit = async (event) => {
     event.preventDefault();
-    const verify = (errors.role);
 
-    if (verify) {
+    let response = await walletRepository.purchase({
+      title: formData.title,
+      mount: formData.mount,
+    })
+    console.log(response)
+    setFormState(true);
+    setFormData({ ...formData, submitted: true });
 
-      let response = await userRepository.addUser({
-        title: formData.title,
-        mount: formData.mount,
-      })
-      setFormState(true);
-    }
+    Swal.fire({
+      title: 'Success!',
+      text: `Update wallet`,
+      icon: 'success',
+      confirmButtonText: 'Cool'
+    })
   }
 
   return (

@@ -5,13 +5,15 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import NameIcon from "@material-ui/icons/AccountBoxOutlined";
 import { useStyles } from '../styles/StyleForm'
+import InputAdornment from "@material-ui/core/InputAdornment";
+import MailIcon from "@material-ui/icons/MailOutline";
+import NameIcon from "@material-ui/icons/AccountBoxOutlined";
 import Alert from '../../layout/components/alert/Alert'
+import Swal from 'sweetalert2'
 import { RepositoryFactory } from '../../../repositories/RepositoryFactory'
 
-const userRepository = RepositoryFactory.get('user')
+const walletRepository = RepositoryFactory.get('wallet')
 
 const CodeVerified = (props) => {
 
@@ -31,13 +33,11 @@ const CodeVerified = (props) => {
   })
 
   const closeForm = () => {
-    props.submitUpdate();
-    props.newUser(formData);
-    window.location.href = "/"
+    window.location.href = "/home"
   }
 
   const closeFormWithoutSave = () => {
-    props.submitUpdate();
+    window.location.href = "/home"
   }
 
   const onChange = event => {
@@ -47,7 +47,7 @@ const CodeVerified = (props) => {
 
     switch (event.target.name) {
       case "code":
-        DniVerify(event.target.name);
+        codeVerify(event.target.name);
         break;
       default:
         console.log("nandemonai");
@@ -57,11 +57,11 @@ const CodeVerified = (props) => {
   const codeVerify = item => {
     let data = formData[item];
 
-    if (/^[a-zA-Z\s]*$/.test(data)) {
+    if (/^[^\s]+$/.test(data)) {
       clearHelperText(item);
       setFormState(false);
     } else {
-      setHelperText(item, "Only letters are allowed");
+      setHelperText(item, "Only letters and numbers are allowed");
       setFormState(true);
     }
 
@@ -81,21 +81,22 @@ const CodeVerified = (props) => {
     })
   };
 
-  const onChecked = event => {
-    setFormData({ ...formData, state: !formData.state });
-  }
-
   const onSubmit = async (event) => {
     event.preventDefault();
-    const verify = (errors.role);
 
-    if (verify) {
+    let response = await walletRepository.purchaseVerified({
+      code: formData.code,
+    })
+    console.log(response)
+    setFormState(true);
+    setFormData({ ...formData, submitted: true });
 
-      let response = await userRepository.addUser({
-        code: formData.code,
-      })
-      setFormState(true);
-    }
+    Swal.fire({
+      title: 'Success!',
+      text: `Update wallet`,
+      icon: 'success',
+      confirmButtonText: 'Cool'
+    })
   }
 
   return (

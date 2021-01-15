@@ -1,30 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Grid,
   TextField,
   Button,
-  IconButton,
-  Switch,
-  FormControlLabel,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  Select,
-  MenuItem,
   Typography,
 } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import MailIcon from "@material-ui/icons/MailOutline";
 import NameIcon from "@material-ui/icons/AccountBoxOutlined";
-import PassIcon from "@material-ui/icons/LockOutlined";
-import VisibilityPassIconOn from "@material-ui/icons/VisibilityOutlined";
-import VisibilityOffOutlinedIconOff from '@material-ui/icons/VisibilityOffOutlined';
 import { useStyles } from '../styles/StyleForm'
 import Alert from '../../layout/components/alert/Alert'
-import { shortLength } from '../../../helps/regex'
+import Swal from 'sweetalert2'
 import { RepositoryFactory } from '../../../repositories/RepositoryFactory'
 
-const userRepository = RepositoryFactory.get('user')
+const walletRepository = RepositoryFactory.get('wallet')
 
 const UpdateWalletForm = (props) => {
 
@@ -48,17 +37,11 @@ const UpdateWalletForm = (props) => {
   })
 
   const closeForm = () => {
-    props.submitUpdate();
-    props.newUser(formData);
-    window.location.href = "/"
+    window.location.href = "/home"
   }
 
   const closeFormWithoutSave = () => {
-    props.submitUpdate();
-  }
-
-  const mouseDownPassword = event => {
-    event.preventDefault();
+    window.location.href = "/home"
   }
 
   const onChange = event => {
@@ -84,11 +67,11 @@ const UpdateWalletForm = (props) => {
   const dniVerify = item => {
     let data = formData[item];
 
-    if (/^[a-zA-Z\s]*$/.test(data)) {
+    if (/^([0-9])*$/.test(data)) {
       clearHelperText(item);
       setFormState(false);
     } else {
-      setHelperText(item, "Only letters are allowed");
+      setHelperText(item, "Only numbers are allowed");
       setFormState(true);
     }
 
@@ -97,11 +80,11 @@ const UpdateWalletForm = (props) => {
   const phoneVerify = item => {
     let data = formData[item];
 
-    if (/^[a-zA-Z\s]*$/.test(data)) {
+    if (/^([0-9])*$/.test(data)) {
       clearHelperText(item);
       setFormState(false);
     } else {
-      setHelperText(item, "Only letters are allowed");
+      setHelperText(item, "Only numbers are allowed");
       setFormState(true);
     }
 
@@ -109,12 +92,12 @@ const UpdateWalletForm = (props) => {
 
   const mountVerify = item => {
     let data = formData[item];
-
-    if (/^[a-zA-Z\s]*$/.test(data)) {
+    console.log(data)
+    if (/^([0-9])*$/.test(data)) {
       clearHelperText(item);
       setFormState(false);
     } else {
-      setHelperText(item, "Only letters are allowed");
+      setHelperText(item, "Only numbers are allowed");
       setFormState(true);
     }
 
@@ -134,23 +117,26 @@ const UpdateWalletForm = (props) => {
     })
   };
 
-  const onChecked = event => {
-    setFormData({ ...formData, state: !formData.state });
-  }
-
   const onSubmit = async (event) => {
     event.preventDefault();
-    const verify = (errors.role);
 
-    if (verify) {
+    let response = await walletRepository.updateWallet({
+      identification_number: formData.identificationNumber,
+      phone: formData.phone,
+      mount: formData.mount,
+    })
 
-      let response = await userRepository.addUser({
-        identification_number: formData.identificationNumber,
-        phone: formData.phone,
-        mount: formData.mount,
-      })
-      setFormState(true);
-    }
+    console.log(response)
+    setFormState(true);
+    setFormData({ ...formData, submitted: true });
+
+    Swal.fire({
+      title: 'Success!',
+      text: `Update wallet`,
+      icon: 'success',
+      confirmButtonText: 'Cool'
+    })
+
   }
 
   return (
