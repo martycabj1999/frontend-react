@@ -64,7 +64,7 @@ const AuthForm = (props) => {
         const tokenDecoded = jwtDecode(response.access_token)
 
         localStorage.setItem('token-test', JSON.stringify(response))
-        dispatch(setAuthAction(response))
+        dispatch(setAuthAction(response.user))
 
         setRedirect(true);
         setAuthError(false);

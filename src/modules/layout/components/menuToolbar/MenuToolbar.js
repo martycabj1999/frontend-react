@@ -21,7 +21,7 @@ function MenuToolbar() {
             <AppBar position="static">
                 <Toolbar style={{}}>
                     <Sliderbar />
-                    {(user.id) ? (<ButtonProfile setUser={user} />) : (
+                    {(user.id) ? (null) : (
                         <Link to="/auth" className={classes.link}>
                             <Button variant='outlined'>
                                 <Typography className={classes.Typography}>Log In</Typography>

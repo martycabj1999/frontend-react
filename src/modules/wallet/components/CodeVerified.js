@@ -7,11 +7,11 @@ import {
 } from "@material-ui/core";
 import { useStyles } from '../styles/StyleForm'
 import InputAdornment from "@material-ui/core/InputAdornment";
-import MailIcon from "@material-ui/icons/MailOutline";
-import NameIcon from "@material-ui/icons/AccountBoxOutlined";
+import HttpsIcon from '@material-ui/icons/Https';
 import Alert from '../../layout/components/alert/Alert'
 import Swal from 'sweetalert2'
 import { RepositoryFactory } from '../../../repositories/RepositoryFactory'
+import { checkAuth } from '../../../Repository'
 
 const walletRepository = RepositoryFactory.get('wallet')
 
@@ -31,14 +31,6 @@ const CodeVerified = (props) => {
     regError: false,
     regMsg: ""
   })
-
-  const closeForm = () => {
-    window.location.href = "/home"
-  }
-
-  const closeFormWithoutSave = () => {
-    window.location.href = "/home"
-  }
 
   const onChange = event => {
 
@@ -84,6 +76,8 @@ const CodeVerified = (props) => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    await checkAuth()
+
     let response = await walletRepository.purchaseVerified({
       code: formData.code,
     })
@@ -93,9 +87,14 @@ const CodeVerified = (props) => {
 
     Swal.fire({
       title: 'Success!',
-      text: `Update wallet`,
+      text: `Confirmed purchase`,
       icon: 'success',
-      confirmButtonText: 'Cool'
+      confirmButtonText: 'Ok'
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        window.location.href = "/home"
+      } 
     })
   }
 
@@ -105,7 +104,7 @@ const CodeVerified = (props) => {
         <Alert type={'error'} content={registerError.regmsg} />
       )}
       {formData.submitted
-        ? (<Alert content={"User created successfully"} type='success' />)
+        ? (<Alert content={"Confirmed purchase"} type='success' />)
         : (<Grid container spacing={2}>
           <Grid item xs={6} sm={6}>
             <TextField
@@ -124,7 +123,7 @@ const CodeVerified = (props) => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <NameIcon />
+                    <HttpsIcon />
                   </InputAdornment>
                 )
               }}
@@ -149,15 +148,6 @@ const CodeVerified = (props) => {
               Save
             </Button>
             : null}
-          <Button
-            style={{ marginLeft: 5 }}
-            variant="outlined"
-            color="primary"
-            className={classes.submit}
-            onClick={formData.submitted ? closeForm : closeFormWithoutSave}
-          >
-            Exit
-          </Button>
         </Grid>
       </Grid>
     </form>

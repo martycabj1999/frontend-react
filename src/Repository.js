@@ -42,7 +42,7 @@ repository.interceptors.response.use(
       const firstErrorKey = error.response.data.errors;
       Swal.fire({
         title: 'Error!',
-        text: `Params: ${error.response.data.errors[0].param}, Error: ${error.response.data.errors[0].msg}`,
+        text: `Params: ${error.response.data.errors.params}, Error: ${error.response.data.errors.msg}`,
         icon: 'error',
         confirmButtonText: 'Cool'
       })
@@ -62,5 +62,18 @@ repository.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export async function checkAuth() {
+  const data = JSON.parse(await localStorage.getItem('token-test'))
+  const token = data.access_token ? 'Bearer ' + data.access_token : null;
+
+  console.log('token', token)
+
+  if (token) {
+    repository.defaults.headers.common['Authorization'] = token;
+  } else {
+    delete repository.defaults.headers.common['Authorization'];
+  }
+}
 
 export default repository;

@@ -29,26 +29,13 @@ const ButtonProfile = (props) => {
     }
     return (
         <div >
-            <Menu
-                id="simple-menu"
-                anchorEl={anchorElem}
-                keepMounted
-                open={Boolean(anchorElem)}
-                onClose={closeMenu}
-            >
                 <div >
-                    <Link to="/profile" style={{ textDecoration: 'none' }}>
-                        <MenuItem>
-                            My profile
-                        </MenuItem>
-                    </Link>
                     <Link onClick={redirectLogout} to="/logout" style={{ textDecoration: 'none' }}>
                         <MenuItem>
                             Logout
                         </MenuItem>
                     </Link>
                 </div>
-            </Menu>
         </div>
     );
 }

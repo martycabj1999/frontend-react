@@ -5,10 +5,9 @@ import { Link } from "react-router-dom"
 import InputAdornment from "@material-ui/core/InputAdornment"
 import MailIcon from "@material-ui/icons/MailOutline"
 import EmailIcon from "@material-ui/icons/EmailOutlined"
-import UserIcon from "@material-ui/icons/AccountBox"
 import NameIcon from "@material-ui/icons/AccountBoxOutlined"
 import PassIcon from "@material-ui/icons/LockOutlined"
-import HouseIcon from "@material-ui/icons/House"
+import PhoneIcon from "@material-ui/icons/Phone"
 import VisibilityPassIconOn from "@material-ui/icons/VisibilityOutlined"
 import VisibilityOffOutlinedIconOff from '@material-ui/icons/VisibilityOffOutlined'
 import Alert from '../../../layout/components/alert/Alert'
@@ -174,19 +173,6 @@ const FormRegister = (props) => {
     }
   }
 
-  const handleSelect = async (value) => {
-
-    const results = await geocodeByAddress(value);
-    const coords = await getLatLng(results[0]);
-    setFormData({
-      ...formData,
-      address: value,
-      latitude: coords.lat,
-      longitude: coords.lng
-    });
-
-  }
-
   const onChange = event => {
     formData[event.target.name] = event.target.value;
     setFormData(formData);
@@ -216,6 +202,7 @@ const FormRegister = (props) => {
 
       let response = await authRepository.register({
         name: formData.name,
+        identification_number: formData.identificationNumber,
         phone: formData.phone,
         email: formData.email,
         password: formData.password
@@ -292,7 +279,7 @@ const FormRegister = (props) => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <NameIcon />
+                  <PhoneIcon />
                 </InputAdornment>
               )
             }}

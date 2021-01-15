@@ -11,6 +11,8 @@ export const getRoutes = () => {
     }
     else{
         let routesPrivates = routesPrivate.filter(elem => 
+            elem.menuList === true)
+        routesPrivates = routesPrivates.filter(elem => 
             elem.roles.find(found => found === user.role.name)
         );
         return routesPublics.concat(routesPrivates)

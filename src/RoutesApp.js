@@ -6,14 +6,17 @@ import Home from './modules/layout/pages/Home';
 import Auth from './modules/user/auth/pages/Auth';
 import Unauthorized from "./modules/layout/components/Unauthorized";
 import Verified from './modules/wallet/pages/Verified';
+import Find from './modules/wallet/pages/Find';
 //icons
 import HomeIcon from '@material-ui/icons/HomeTwoTone';
-import ProfileIcon from '@material-ui/icons/AccountCircleTwoTone';
-import UserManagementIcon from '@material-ui/icons/SupervisedUserCircleTwoTone';
+import ShopIcon from '@material-ui/icons/Shop';
+import HttpsIcon from '@material-ui/icons/Https';
 import AuthIcon from '@material-ui/icons/VpnKeyTwoTone';
 import ExitToAppTwoToneIcon from '@material-ui/icons/ExitToAppTwoTone';
 import RegisterIcon from '@material-ui/icons/FaceTwoTone';
 import NotAutorizeIcon from '@material-ui/icons/HighlightOffTwoTone';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 
 export const routesPublic = [
     {
@@ -59,7 +62,7 @@ export const routesPrivate = [
         component: Purchase,
         roles: ['admin', 'user'],
         menuList: true,
-        icon: <ProfileIcon />,
+        icon: <ShopIcon />,
     },
     {
         name: "Update",
@@ -67,7 +70,7 @@ export const routesPrivate = [
         component: Update,
         roles: ['admin', 'user'],
         menuList: true,
-        icon: <ProfileIcon />,
+        icon: <AccountBalanceWalletIcon />,
     },
     {
         name: "Verified",
@@ -75,6 +78,14 @@ export const routesPrivate = [
         component: Verified,
         roles: ['admin', 'user'],
         menuList: false,
-        icon: <ProfileIcon />,
+        icon: <HttpsIcon />,
+    },
+    {
+        name: "Find Wallet",
+        path: '/find',
+        component: Find,
+        roles: ['admin', 'user'],
+        menuList: true,
+        icon: <SearchIcon />,
     }
 ];

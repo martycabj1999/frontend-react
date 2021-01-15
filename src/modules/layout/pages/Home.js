@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
+import ButtonProfile from '../components/ButtonProfile'
 import { makeStyles } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 import { getUserHelp } from '../../../helps/getUser';
@@ -32,6 +33,9 @@ const Home = (props) => {
             <Grid item xs={12} sm={6}><HomeIcon className={classes.iconHome} /></Grid>
             <Grid item xs={12} sm={6}><Typography className={classes.typography} variant='h4'>
                 Hello {user.name} !
+            </Typography></Grid>
+            <Grid item xs={12} sm={6}><Typography className={classes.typography} variant='h4'>
+                <ButtonProfile />
             </Typography></Grid>
         </Grid>
 

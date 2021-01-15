@@ -6,12 +6,14 @@ import {
   Typography,
 } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import MailIcon from "@material-ui/icons/MailOutline";
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import PhoneIcon from '@material-ui/icons/Phone';
 import NameIcon from "@material-ui/icons/AccountBoxOutlined";
 import { useStyles } from '../styles/StyleForm'
 import Alert from '../../layout/components/alert/Alert'
 import Swal from 'sweetalert2'
 import { RepositoryFactory } from '../../../repositories/RepositoryFactory'
+import { checkAuth } from '../../../Repository'
 
 const walletRepository = RepositoryFactory.get('wallet')
 
@@ -23,26 +25,18 @@ const UpdateWalletForm = (props) => {
   const [formData, setFormData] = useState({
     identificationNumber: "",
     phone: "",
-    mount: "",
+    amount: "",
     submitted: false
   })
   const [errors, setErrors] = useState({
     identificationNumber: { status: false, text: "" },
     phone: { status: false, text: "" },
-    mount: { status: false, text: "" },
+    amount: { status: false, text: "" },
   })
   const [registerError, setRegisterError] = useState({
     regError: false,
     regMsg: ""
   })
-
-  const closeForm = () => {
-    window.location.href = "/home"
-  }
-
-  const closeFormWithoutSave = () => {
-    window.location.href = "/home"
-  }
 
   const onChange = event => {
 
@@ -56,8 +50,8 @@ const UpdateWalletForm = (props) => {
       case "phone":
         phoneVerify(event.target.name);
         break;
-      case "mount":
-        mountVerify(event.target.name);
+      case "amount":
+        amountVerify(event.target.name);
         break;
       default:
         console.log("nandemonai");
@@ -90,7 +84,7 @@ const UpdateWalletForm = (props) => {
 
   };
 
-  const mountVerify = item => {
+  const amountVerify = item => {
     let data = formData[item];
     console.log(data)
     if (/^([0-9])*$/.test(data)) {
@@ -120,10 +114,12 @@ const UpdateWalletForm = (props) => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    await checkAuth()
+
     let response = await walletRepository.updateWallet({
       identification_number: formData.identificationNumber,
       phone: formData.phone,
-      mount: formData.mount,
+      amount: formData.amount,
     })
 
     console.log(response)
@@ -134,7 +130,12 @@ const UpdateWalletForm = (props) => {
       title: 'Success!',
       text: `Update wallet`,
       icon: 'success',
-      confirmButtonText: 'Cool'
+      confirmButtonText: 'Ok'
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        window.location.href = "/home"
+      } 
     })
 
   }
@@ -145,7 +146,7 @@ const UpdateWalletForm = (props) => {
         <Alert type={'error'} content={registerError.regmsg} />
       )}
       {formData.submitted
-        ? (<Alert content={"User created successfully"} type='success' />)
+        ? (<Alert content={"Update wallet"} type='success' />)
         : (<Grid container spacing={2}>
           <Grid item xs={6} sm={6}>
             <TextField
@@ -185,7 +186,7 @@ const UpdateWalletForm = (props) => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <NameIcon />
+                    <PhoneIcon />
                   </InputAdornment>
                 )
               }}
@@ -193,22 +194,22 @@ const UpdateWalletForm = (props) => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              helperText={errors.mount.text}
-              error={errors.mount.status}
-              placeholder={formData.mount}
+              helperText={errors.amount.text}
+              error={errors.amount.status}
+              placeholder={formData.amount}
               onChange={onChange}
-              autoComplete="mount"
-              name="mount"
+              autoComplete="amount"
+              name="amount"
               variant="filled"
               type="number"
               fullWidth
               required
-              id="mount"
+              id="amount"
               label={"Mount"}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <MailIcon />
+                    <MonetizationOnIcon />
                   </InputAdornment>
                 )
               }}
@@ -234,15 +235,6 @@ const UpdateWalletForm = (props) => {
               Save
             </Button>
             : null}
-          <Button
-            style={{ marginLeft: 5 }}
-            variant="outlined"
-            color="primary"
-            className={classes.submit}
-            onClick={formData.submitted ? closeForm : closeFormWithoutSave}
-          >
-            Exit
-          </Button>
         </Grid>
       </Grid>
     </form>

@@ -6,8 +6,6 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => {
 
     let user = useSelector(state => state.security.user);
 
-    console.log('route roles', roles)
-
     const validationToken = (user) => {
         if (user.exp) {
             let dateNow = new Date();

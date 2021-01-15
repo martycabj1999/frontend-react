@@ -6,8 +6,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import ShopIcon from '@material-ui/icons/Shop';
+import PhoneIcon from "@material-ui/icons/Phone";
+import NameIcon from "@material-ui/icons/AccountBoxOutlined";
 import { useStyles } from '../styles/StyleForm'
 import Alert from '../../layout/components/alert/Alert'
 import Swal from 'sweetalert2'
@@ -16,19 +16,19 @@ import { checkAuth } from '../../../Repository'
 
 const walletRepository = RepositoryFactory.get('wallet')
 
-const PurchaseForm = (props) => {
+const FindWallet = (props) => {
 
   const classes = useStyles();
 
   const [formState, setFormState] = useState(false)
   const [formData, setFormData] = useState({
-    title: "",
-    amount: "",
+    identificationNumber: "",
+    phone: "",
     submitted: false
   })
   const [errors, setErrors] = useState({
-    title: { status: false, text: "" },
-    amount: { status: false, text: "" },
+    identificationNumber: { status: false, text: "" },
+    phone: { status: false, text: "" },
   })
   const [registerError, setRegisterError] = useState({
     regError: false,
@@ -41,31 +41,31 @@ const PurchaseForm = (props) => {
     setFormData(formData);
 
     switch (event.target.name) {
-      case "title":
-        titleVerify(event.target.name);
+      case "identificationNumber":
+        dniVerify(event.target.name);
         break;
-      case "amount":
-        amountVerify(event.target.name);
+      case "phone":
+        phoneVerify(event.target.name);
         break;
       default:
         console.log("nandemonai");
     }
   };
 
-  const titleVerify = item => {
+  const dniVerify = item => {
     let data = formData[item];
 
-    if (/^[a-zA-Z\s]*$/.test(data)) {
+    if (/^([0-9])*$/.test(data)) {
       clearHelperText(item);
       setFormState(false);
     } else {
-      setHelperText(item, "Only letters are allowed");
+      setHelperText(item, "Only numbers are allowed");
       setFormState(true);
     }
 
   };
 
-  const amountVerify = item => {
+  const phoneVerify = item => {
     let data = formData[item];
 
     if (/^([0-9])*$/.test(data)) {
@@ -97,25 +97,24 @@ const PurchaseForm = (props) => {
 
     await checkAuth()
 
-    let response = await walletRepository.purchase({
-      title: formData.title,
-      amount: formData.amount,
+    let response = await walletRepository.getWallet({
+      identification_number: formData.identificationNumber,
+      phone: formData.phone,
     })
+
     console.log(response)
     setFormState(true);
     setFormData({ ...formData, submitted: true });
 
     Swal.fire({
       title: 'Success!',
-      text: `Purchase pending confirmation`,
+      text: `Wallet found with balance $`+response.amount,
       icon: 'success',
       confirmButtonText: 'Ok'
     }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        window.location.href = "/code"
-      } 
+        window.location.href = "/home"
     })
+
   }
 
   return (
@@ -124,47 +123,47 @@ const PurchaseForm = (props) => {
         <Alert type={'error'} content={registerError.regmsg} />
       )}
       {formData.submitted
-        ? (<Alert content={"Purchase pending confirmation"} type='success' />)
+        ? (<Alert content={"Wallet found"} type='success' />)
         : (<Grid container spacing={2}>
           <Grid item xs={6} sm={6}>
             <TextField
-              autoComplete="title"
-              name="title"
+              helperText={errors.identificationNumber.text}
+              error={errors.identificationNumber.status}
+              autoComplete="identificationNumber"
+              name="identificationNumber"
               variant="filled"
               type="string"
               fullWidth
               required
-              id="title"
-              label={"Title"}
-              placeholder={formData.title}
+              id="identificationNumber"
+              label={"DNI"}
+              placeholder={formData.identificationNumber}
               onChange={onChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <ShopIcon />
+                    <NameIcon />
                   </InputAdornment>
                 )
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={6} sm={6}>
             <TextField
-              helperText={errors.amount.text}
-              error={errors.amount.status}
-              placeholder={formData.amount}
-              onChange={onChange}
-              autoComplete="amount"
-              name="amount"
+              autoComplete="phone"
+              name="phone"
               variant="filled"
               type="number"
               fullWidth
               required
-              id="amount"
-              label={"Mount"}
+              id="phone"
+              label={"Phone"}
+              placeholder={formData.phone}
+              onChange={onChange}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <MonetizationOnIcon />
+                    <PhoneIcon />
                   </InputAdornment>
                 )
               }}
@@ -196,4 +195,4 @@ const PurchaseForm = (props) => {
   );
 }
 
-export default PurchaseForm;
+export default FindWallet;
