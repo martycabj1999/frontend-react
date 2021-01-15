@@ -34,9 +34,9 @@ const Home = (props) => {
             <Grid item xs={12} sm={6}><Typography className={classes.typography} variant='h4'>
                 Hello {user.name} !
             </Typography></Grid>
-            <Grid item xs={12} sm={6}><Typography className={classes.typography} variant='h4'>
+           { user.id ? <Grid item xs={12} sm={6}><Typography className={classes.typography} variant='h4'>
                 <ButtonProfile />
-            </Typography></Grid>
+            </Typography></Grid> : null }
         </Grid>
 
 
